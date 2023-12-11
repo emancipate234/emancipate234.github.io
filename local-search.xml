@@ -4,38 +4,25 @@
   
   
   <entry>
-    <title>测试文章</title>
-    <link href="/2023/12/12/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
-    <url>/2023/12/12/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
+    <title>限流算法笔记</title>
+    <link href="/2023/11/25/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"/>
+    <url>/2023/11/25/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</url>
     
-    <content type="html"><![CDATA[<p>这是一篇测试文章</p>]]></content>
+    <content type="html"><![CDATA[<p>令牌桶算法 <strong>Token Bucket Algorithm</strong> </p><p>基本内容：</p><ul><li>每 $$1&#x2F;r$$ 秒向桶中放入一个令牌 <strong>token</strong></li><li>桶的容量定义为最多持有 $$b$$ 个 <strong>token</strong>，当一个 <strong>token</strong> 在桶容量满时到达，这个 <strong>token</strong> 会被丢弃</li><li>当一个 $$n$$ bytes 的分组到达时，可能出现以下情况：</li><li>当桶中容量大于等于 $$n$$ 个 token ，从桶中移除 $$n$$ 个 <strong>token</strong> 并将分组发送</li><li>当桶中容量不足 $$n$$ 个 token，不从桶中移除 token ，该分组即为不合格分组 <strong>non-conformant</strong></li><li>平均速率 $$r$$</li><li>假设 $$M$$ 作为最大传输速率（bytes&#x2F;second），那么假设 $$r$$ &lt; $$M$$ ，有 $$T_{max}$$ &#x3D; $$b&#x2F;(M - r)$$ ，且最大突发传输量大小 $$B_{max}$$ &#x3D; $$T_{max}$$ ∗ $$M$$</li></ul><p>漏桶算法 <strong>Leaky Bucket Algorithm</strong></p><p>基本内容：</p><ul><li><strong>as a meter</strong> </li><li>固定容量的桶，以固定的速率泄露</li><li>当桶是空的时候，停止泄露</li><li>当判断一个分组是否符合要求时，要求该分组可以看作向桶中加入特定量的水，该量可以按整个分组长度定义或按照分组长度的一定比例进行定义</li><li>如果水的量超出了桶的容量，那么该分组 <strong>non-conformant</strong> 并且不改变桶内水量</li><li>该方法与令牌桶算法是镜像的，在实际效果方面一致。</li><li><strong>as a queue</strong></li><li>漏桶当作一个有限队列，当新的分组来临时，如果有空间就加入队列，否则丢弃</li><li>桶中流量只能以恒定速率流出（At every clock tick one packet is transmitted）</li><li>可以用来 <strong>traffic shaping</strong> 平滑流量，抵消峰值流量</li></ul><p><strong>参考</strong></p><p><a href="https://en.wikipedia.org/wiki/Token_bucket">https://en.wikipedia.org/wiki/Token_bucket</a></p><p><a href="https://en.wikipedia.org/wiki/Leaky_bucket">https://en.wikipedia.org/wiki/Leaky_bucket</a></p>]]></content>
     
     
     <categories>
       
-      <category>Java</category>
+      <category>Algorithm</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>原创</tag>
+      <tag>学习</tag>
       
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/2023/12/11/hello-world/"/>
-    <url>/2023/12/11/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
     
   </entry>
   
