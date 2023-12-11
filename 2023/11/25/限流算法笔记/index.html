@@ -16,15 +16,15 @@
   <meta name="author" content="Moaster">
   <meta name="keywords" content="">
   
-    <meta name="description" content="令牌桶算法 Token Bucket Algorithm  基本内容：  每 $$1&#x2F;r$$ 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 $$b$$ 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 $$n$$ bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 $$n$$ 个 token ，从桶中移除 $$n$$ 个">
+    <meta name="description" content="令牌桶算法 Token Bucket Algorithm  基本内容：  每 $1&#x2F;r$ 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 $b$ 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 $n$ bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 $n$ 个 token ，从桶中移除 $n$ 个 token 并将分组">
 <meta property="og:type" content="article">
 <meta property="og:title" content="限流算法笔记">
 <meta property="og:url" content="http://example.com/2023/11/25/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="Moaster">
-<meta property="og:description" content="令牌桶算法 Token Bucket Algorithm  基本内容：  每 $$1&#x2F;r$$ 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 $$b$$ 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 $$n$$ bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 $$n$$ 个 token ，从桶中移除 $$n$$ 个">
+<meta property="og:description" content="令牌桶算法 Token Bucket Algorithm  基本内容：  每 $1&#x2F;r$ 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 $b$ 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 $n$ bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 $n$ 个 token ，从桶中移除 $n$ 个 token 并将分组">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-24T16:04:12.000Z">
-<meta property="article:modified_time" content="2023-12-11T19:13:14.111Z">
+<meta property="article:modified_time" content="2023-12-11T19:30:16.062Z">
 <meta property="article:author" content="Moaster">
 <meta property="article:tag" content="学习">
 <meta name="twitter:card" content="summary_large_image">
@@ -313,13 +313,13 @@
                 <p>令牌桶算法 <strong>Token Bucket Algorithm</strong> </p>
 <p>基本内容：</p>
 <ul>
-<li>每 $$1&#x2F;r$$ 秒向桶中放入一个令牌 <strong>token</strong></li>
-<li>桶的容量定义为最多持有 $$b$$ 个 <strong>token</strong>，当一个 <strong>token</strong> 在桶容量满时到达，这个 <strong>token</strong> 会被丢弃</li>
-<li>当一个 $$n$$ bytes 的分组到达时，可能出现以下情况：</li>
-<li>当桶中容量大于等于 $$n$$ 个 token ，从桶中移除 $$n$$ 个 <strong>token</strong> 并将分组发送</li>
-<li>当桶中容量不足 $$n$$ 个 token，不从桶中移除 token ，该分组即为不合格分组 <strong>non-conformant</strong></li>
-<li>平均速率 $$r$$</li>
-<li>假设 $$M$$ 作为最大传输速率（bytes&#x2F;second），那么假设 $$r$$ &lt; $$M$$ ，有 $$T_{max}$$ &#x3D; $$b&#x2F;(M - r)$$ ，且最大突发传输量大小 $$B_{max}$$ &#x3D; $$T_{max}$$ ∗ $$M$$</li>
+<li>每 $1&#x2F;r$ 秒向桶中放入一个令牌 <strong>token</strong></li>
+<li>桶的容量定义为最多持有 $b$ 个 <strong>token</strong>，当一个 <strong>token</strong> 在桶容量满时到达，这个 <strong>token</strong> 会被丢弃</li>
+<li>当一个 $n$ bytes 的分组到达时，可能出现以下情况：</li>
+<li>当桶中容量大于等于 $n$ 个 token ，从桶中移除 $n$ 个 <strong>token</strong> 并将分组发送</li>
+<li>当桶中容量不足 $n$ 个 token，不从桶中移除 token ，该分组即为不合格分组 <strong>non-conformant</strong></li>
+<li>平均速率 $r$</li>
+<li>假设 $M$ 作为最大传输速率（bytes&#x2F;second），那么假设 $r$ &lt; $M$ ，有 $T_{max}$ &#x3D; $b&#x2F;(M - r)$ ，且最大突发传输量大小 $B_{max}$ &#x3D; $T_{max}$ ∗ $M$</li>
 </ul>
 <p>漏桶算法 <strong>Leaky Bucket Algorithm</strong></p>
 <p>基本内容：</p>
