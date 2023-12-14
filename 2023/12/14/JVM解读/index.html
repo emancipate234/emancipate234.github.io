@@ -16,22 +16,22 @@
   <meta name="author" content="Moaster">
   <meta name="keywords" content="">
   
-    <meta name="description" content="令牌桶算法 Token Bucket Algorithm 基本内容：  每 \(1&#x2F;r\) 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 \(b\) 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 \(n\) bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 \(n\) 个 token ，从桶中移除 \(n">
+    <meta name="description" content="内容大部分来自《深入理解Java虚拟机（第三版）》By 周志明 自动内存管理 内存区域 这一部分主要介绍 Java 虚拟机内存各个区域。 运行时数据区域 线程私有：依赖用户线程的启动和结束而建立和销毁。包括程序计数器，Java虚拟机栈，本地方法栈 线程共享：随着虚拟机进程的启动而一直存在。包括堆，方法区 程序计数器 当前线程所执行的字节码的行号指示器。（类比于计组中的 PC ）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="限流算法笔记">
-<meta property="og:url" content="http://example.com/2023/11/25/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="JVM内存管理">
+<meta property="og:url" content="http://example.com/2023/12/14/JVM%E8%A7%A3%E8%AF%BB/index.html">
 <meta property="og:site_name" content="Moaster">
-<meta property="og:description" content="令牌桶算法 Token Bucket Algorithm 基本内容：  每 \(1&#x2F;r\) 秒向桶中放入一个令牌 token 桶的容量定义为最多持有 \(b\) 个 token，当一个 token 在桶容量满时到达，这个 token 会被丢弃 当一个 \(n\) bytes 的分组到达时，可能出现以下情况： 当桶中容量大于等于 \(n\) 个 token ，从桶中移除 \(n">
+<meta property="og:description" content="内容大部分来自《深入理解Java虚拟机（第三版）》By 周志明 自动内存管理 内存区域 这一部分主要介绍 Java 虚拟机内存各个区域。 运行时数据区域 线程私有：依赖用户线程的启动和结束而建立和销毁。包括程序计数器，Java虚拟机栈，本地方法栈 线程共享：随着虚拟机进程的启动而一直存在。包括堆，方法区 程序计数器 当前线程所执行的字节码的行号指示器。（类比于计组中的 PC ）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-24T16:04:12.000Z">
-<meta property="article:modified_time" content="2023-12-11T19:49:45.745Z">
+<meta property="article:published_time" content="2023-12-14T11:59:48.000Z">
+<meta property="article:modified_time" content="2023-12-14T17:05:37.285Z">
 <meta property="article:author" content="Moaster">
-<meta property="article:tag" content="学习">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>限流算法笔记 - Moaster</title>
+  <title>JVM内存管理 - Moaster</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -226,7 +226,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="限流算法笔记"></span>
+            <span id="subtitle" data-typed-text="JVM内存管理"></span>
           
         </div>
 
@@ -237,8 +237,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-25 00:04" pubdate>
-          2023年11月25日 凌晨
+        <time datetime="2023-12-14 19:59" pubdate>
+          2023年12月14日 晚上
         </time>
       </span>
     
@@ -249,7 +249,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          345 字
+          2.1k 字
         
       </span>
     
@@ -260,7 +260,7 @@
         
         
         
-          3 分钟
+          18 分钟
         
       </span>
     
@@ -305,58 +305,112 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">限流算法笔记</h1>
+            <h1 id="seo-header">JVM内存管理</h1>
             
             
               <div class="markdown-body">
                 
-                <p>令牌桶算法 <strong>Token Bucket Algorithm</strong></p>
-<p>基本内容：</p>
-<ul>
-<li>每 <span class="math inline">\(1/r\)</span> 秒向桶中放入一个令牌
-<strong>token</strong></li>
-<li>桶的容量定义为最多持有 <span class="math inline">\(b\)</span> 个
-<strong>token</strong>，当一个 <strong>token</strong>
-在桶容量满时到达，这个 <strong>token</strong> 会被丢弃</li>
-<li>当一个 <span class="math inline">\(n\)</span> bytes
-的分组到达时，可能出现以下情况：</li>
-<li>当桶中容量大于等于 <span class="math inline">\(n\)</span> 个 token
-，从桶中移除 <span class="math inline">\(n\)</span> 个
-<strong>token</strong> 并将分组发送</li>
-<li>当桶中容量不足 <span class="math inline">\(n\)</span> 个
-token，不从桶中移除 token ，该分组即为不合格分组
-<strong>non-conformant</strong></li>
-<li>平均速率 <span class="math inline">\(r\)</span></li>
-<li>假设 <span class="math inline">\(M\)</span>
-作为最大传输速率（bytes/second），那么假设 <span
-class="math inline">\(r\)</span> &lt; <span
-class="math inline">\(M\)</span> ，有 <span
-class="math inline">\(T_{max}\)</span> = <span
-class="math inline">\(b/(M - r)\)</span> ，且最大突发传输量大小 <span
-class="math inline">\(B_{max}\)</span> = <span
-class="math inline">\(T_{max}\)</span> ∗ <span
-class="math inline">\(M\)</span></li>
-</ul>
-<p>漏桶算法 <strong>Leaky Bucket Algorithm</strong></p>
-<p>基本内容：</p>
-<ul>
-<li><strong>as a meter</strong></li>
-<li>固定容量的桶，以固定的速率泄露</li>
-<li>当桶是空的时候，停止泄露</li>
-<li>当判断一个分组是否符合要求时，要求该分组可以看作向桶中加入特定量的水，该量可以按整个分组长度定义或按照分组长度的一定比例进行定义</li>
-<li>如果水的量超出了桶的容量，那么该分组 <strong>non-conformant</strong>
-并且不改变桶内水量</li>
-<li>该方法与令牌桶算法是镜像的，在实际效果方面一致。</li>
-<li><strong>as a queue</strong></li>
-<li>漏桶当作一个有限队列，当新的分组来临时，如果有空间就加入队列，否则丢弃</li>
-<li>桶中流量只能以恒定速率流出（At every clock tick one packet is
-transmitted）</li>
-<li>可以用来 <strong>traffic shaping</strong>
-平滑流量，抵消峰值流量</li>
-</ul>
-<p><strong>参考</strong></p>
-<p>https://en.wikipedia.org/wiki/Token_bucket</p>
-<p>https://en.wikipedia.org/wiki/Leaky_bucket</p>
+                <p><strong>内容大部分来自《深入理解Java虚拟机（第三版）》By
+周志明</strong></p>
+<h3 id="自动内存管理">自动内存管理</h3>
+<h4 id="内存区域">内存区域</h4>
+<p>这一部分主要介绍 Java 虚拟机内存各个区域。</p>
+<h5 id="运行时数据区域">运行时数据区域</h5>
+<p><strong>线程私有：</strong>依赖用户线程的启动和结束而建立和销毁。包括<strong>程序计数器，Java虚拟机栈，本地方法栈</strong></p>
+<p><strong>线程共享：</strong>随着虚拟机进程的启动而一直存在。包括<strong>堆，方法区</strong></p>
+<p><strong>程序计数器</strong></p>
+<p>当前线程所执行的<strong>字节码的行号指示器</strong>。（类比于计组中的
+PC ）</p>
+<p>也起到当线程切换时恢复到正确的执行位置的作用，如果正在执行 Java
+方法，那么记录<strong>正在执行的字节码指令地址</strong>，如果时本地（Native）方法，计数器值为空（Undefined）,
+需要注意的是，该区域<strong>没有规定任何 OutOfMemoryError</strong></p>
+<h5 id="java虚拟机栈">Java虚拟机栈</h5>
+<p>每个方法被执行时，虚拟机都会同步创建一个<strong>栈帧</strong>（
+出栈入栈 ）</p>
+<p>栈帧存储：<strong>局部变量表，操作数栈，动态连接，方法返回地址（出口）</strong></p>
+<p>局部变量表存放编译期可知的各种虚拟机<strong>基本数据类型</strong>（boolean，byte，char，short，int，float，long，double）和对象引用（reference）类型（指向对象起始地址/代表对象的句柄），returnAddress
+类型（指向了一条字节码指令地址）</p>
+<p>局部变量表以<strong>局部变量槽（slot）</strong>存这些，64位长度占两个，编译期间完成分配。大小：slot
+数量。</p>
+<p>两类异常：线程请求栈深度大于虚拟机允许的深度，抛出 StackOverflowError
+异常，如果可以动态扩展，当栈扩展无法申请到足够内存会抛出
+OutOfMemoryError 异常。</p>
+<p><strong>操作数栈：</strong>存放方法执行过程中的中间计算结果和临时变量。</p>
+<p><strong>动态链接：</strong>服务于<strong>一个方法需要调用其他方法</strong>的场景。当一个方法要调用其他的方法，它需要将常量池中指向方法的符号引用转化为其在内存中的直接引用。这就是动态链接的作用。</p>
+<p><strong>本地方法栈</strong></p>
+<p>为虚拟机使用到的 Native 方法服务，其他与 Java 虚拟机栈一样。</p>
+<h5 id="堆">堆</h5>
+<p>存放对象实例，“几乎”所有的对象实例和数组在这里分配内存。（需要考虑到JIT逃逸分析，栈上分配和标量替换）</p>
+<p>可以划分出多个线程私有的分配缓冲区（TLAB），提升对象分配时的效率。</p>
+<p>无法完成实例分配，堆也无法继续扩展，抛出 OutOfMemoryError</p>
+<h5 id="方法区">方法区</h5>
+<p>存储已经被虚拟机加载的<strong>类型信息，常量，静态变量，JIT编译后的代码缓存</strong>等。</p>
+<p>方法区在 JDK1.8 之前由永久代实现，1.8之后变成了元空间。</p>
+<p>元空间利用本地内存实现，内含运行时常量池。</p>
+<p>无法满足新的内存分配需求时会抛出 OutOfMemoryError</p>
+<h5 id="运行时常量池">运行时常量池</h5>
+<p>是方法区的一部分，Class
+文件中除了有类的版本，字段，方法，接口等描述信息外，还有一项是常量池表，用于存放<strong>编译期生成的各种字面量与符号引用</strong>，这部分内容将在类加载后存放到此地。</p>
+<p>除了保存Class
+文件中的符号引用外，还会把由符号引用翻译出来的直接引用也存储。</p>
+<p>具备动态性：运行期间也可以把新的常量放入池中。（ String 类的 intern()
+方法）</p>
+<p>OutOfMemoryError</p>
+<h5 id="直接内存">直接内存</h5>
+<p>JDK1.4中新加入了
+NIO类，引入了一种基于通道（Channel）与缓冲区（Buffer）的 I/O
+方式，可以使用 Native
+函数直接分配堆外内存。然后通过一个存储在Java堆里面的 DirectByteBuffer
+对象作为这块内存的引用进行操作。从而避免了在 Java 堆和 Native
+堆中来回复制数据。</p>
+<p>需要注意的是，配置虚拟机参数时不能忽略直接内存，否则动态扩展会
+OutOfMemoryError</p>
+<h5 id="虚拟机对象的前世今生">虚拟机对象的前世今生</h5>
+<p>对象的创建：</p>
+<p>类加载检查</p>
+<p>new指令，首先检查这个指令参数是否能在<strong>常量池中定位到符号引用</strong>，检查该符号引用代表的类是否已经被加载，解析和初始化过，如果没有就必须<strong>先执行相应的类加载过程</strong>。</p>
+<p>分配内存</p>
+<p>为新生对象分配内存，把一块确定大小的内存从 Java
+堆中划分出来。两种分配方式：指针碰撞/空闲列表</p>
+<p>指针碰撞：指针向空闲空间方向移动一段距离分配内存。</p>
+<p>空闲列表：维护一个列表，记录哪些内存块可用，分配时找出一块足够大的空间划分给对象实例，并更新列表上的记录。</p>
+<p>选择取决于堆是否规整（有无内存碎片），Serial，ParNew收集器带有空间压缩整理compact能力，可以用指针碰撞。（标记整理）</p>
+<p>而CMS基于清除，要采用空闲列表。（标记清除）</p>
+<p><strong>修改指针的并发问题</strong></p>
+<p>有可能正在给对象 A
+分配内存，指针还没来得及修改，B又同时使用了原来的指针来分配内存。</p>
+<p>两种方案：</p>
+<ol type="1">
+<li>CAS配上失败重试：乐观锁，每次不加锁而是假设没有冲突去完成某项操作，如果因为冲突失败就重试，直到成功。用这种方式可以保证更新操作的原子性。</li>
+<li>TLAB：为每个线程预先在 Eden 分配内存，当用完时再采用 CAS</li>
+</ol>
+<p>初始化零值</p>
+<p>将分配到的内存空间都初始化为零值。（对象实例可以不赋初始值直接用）</p>
+<p>设置对象头</p>
+<p>虚拟机对对象做必要的设置，例如是哪个类的实例，如何才能找到类的元数据信息，对象的哈希码，GC分带年龄等。这些信息存放在对象头中。</p>
+<p>执行init方法</p>
+<p>从Java程序视角，new指令后会紧接着执行<init>()方法，按照意愿初始化。</p>
+<p>HotSpot解释器代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 1.确保常量池中存放的是已经解释的类</span><br><span class="hljs-keyword">if</span>(!constants-&gt;<span class="hljs-built_in">tag_at</span>(index).<span class="hljs-built_in">is_unresolved_klass</span>())&#123;<br>    <span class="hljs-comment">// 断言确保是KlassOop和instanceKlassOop</span><br>    oop entry = (KlassOop) *constants-&gt;<span class="hljs-built_in">obj_at_addr</span>(index);<br>    <span class="hljs-built_in">assert</span>(entry-&gt;<span class="hljs-built_in">is_klass</span>(),<span class="hljs-string">&quot;Should be resolved klass&quot;</span>);<br>    KlassOop k_entry = (KlassOop) entry;<br>    <span class="hljs-built_in">assert</span>(k_entry-&gt;<span class="hljs-built_in">klass_part</span>()-&gt;oop_is_instance,<span class="hljs-string">&quot;Should be instanceKlass&quot;</span>);<br>    instanceKlass* ik = (instanceKlass*) k_entry-&gt;<span class="hljs-built_in">klass_part</span>();<br>    <span class="hljs-comment">// 确保对象所属类型已经经过初始化阶段</span><br>    <span class="hljs-keyword">if</span>( ik-&gt; <span class="hljs-built_in">is_initialized</span>() &amp;&amp; ik-&gt; <span class="hljs-built_in">can_be_fastpath_allocated</span>())&#123;<br>        <span class="hljs-comment">//取对象长度</span><br>        <span class="hljs-type">size_t</span> obj_size = ik-&gt;<span class="hljs-built_in">size_helper</span>();<br>        oop result = <span class="hljs-literal">NULL</span>;<br>        <span class="hljs-comment">//记录是否需要将对象所有字段置零值</span><br>        <span class="hljs-type">bool</span> need_zero = !ZeroTLAB;<br>        <span class="hljs-comment">//是否在TLAB中分配对象</span><br>        <span class="hljs-keyword">if</span>( useTLAB )&#123;<br>            result = (oop) THREAD-&gt;<span class="hljs-built_in">tlab</span>().<span class="hljs-built_in">allocate</span>(obj_size);<br>        &#125;    <br>        <span class="hljs-keyword">if</span>(result == <span class="hljs-literal">NULL</span>)&#123;<br>            need_zero = <span class="hljs-literal">true</span>;<br>            <span class="hljs-comment">// 直接在eden中分配对象</span><br>            retry:<br>            	HeapWord* compare_to = *Universe::<span class="hljs-built_in">heap</span>()-&gt;<span class="hljs-built_in">top_addr</span>();<br>            	HeapWord* new_top = compare_to + obj_size;<br>            <span class="hljs-comment">// cmpxchg是x86中的CAS指令，这里是一个C++方法，通过CAS方式分配空间，并发失败的话，转到retry中重试直到成功为止</span><br>            	<span class="hljs-keyword">if</span>( new_top &lt;= *Universe::<span class="hljs-built_in">heap</span>()-&gt;<span class="hljs-built_in">end_addr</span>())&#123;<br>					<span class="hljs-keyword">if</span>(Atomic::<span class="hljs-built_in">cmpxchg_ptr</span>(new_top, Universe::<span class="hljs-built_in">heap</span>()-&gt;<span class="hljs-built_in">top_addr</span>(),compare_to) != compare_to)&#123;<br>                        <span class="hljs-keyword">goto</span> retry;<br>                    &#125;<br>                    result = (oop) compare_to;<br>                &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span>(result != <span class="hljs-literal">NULL</span>)&#123;<br>            <span class="hljs-comment">// 如果需要，为对象初始化零值</span><br>            <span class="hljs-keyword">if</span>(need_zero)&#123;<br>				HeapWord* to_zero = (HeapWord*) result + <span class="hljs-built_in">sizeof</span>(oopDesc) / oopSize;<br>                obj_size -= <span class="hljs-built_in">sizeof</span>(oopDesc) / oopSize;<br>                <span class="hljs-keyword">if</span>(obj_size &gt; <span class="hljs-number">0</span>)&#123;<br>                    <span class="hljs-built_in">memset</span>(to_zero,<span class="hljs-number">0</span>,obj_size * HeapWordSize);<br>                &#125;<br>            &#125;<br>            <span class="hljs-comment">// 根据是否使用 偏向锁，设置对象头信息</span><br>            <span class="hljs-keyword">if</span>(UseBiasedLocking)&#123;<br>				result-&gt;<span class="hljs-built_in">set_mark</span>(ik-&gt;<span class="hljs-built_in">prototype_header</span>());<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>				result-&gt;<span class="hljs-built_in">set_mark</span>(markOopDesc::<span class="hljs-built_in">prototype</span>());<br>            &#125;<br>            result-&gt;<span class="hljs-built_in">set_klass_gap</span>(<span class="hljs-number">0</span>);<br>            result-&gt;<span class="hljs-built_in">set_klass</span>(k_entry);<br>            <span class="hljs-comment">//将对象引用入栈，继续执行下一条指令</span><br>            <span class="hljs-built_in">SET_STACK_OBJECT</span>(result,<span class="hljs-number">0</span>);<br>            <span class="hljs-built_in">UPDATE_PC_AND_TOS_AND_CONTINUE</span>(<span class="hljs-number">3</span>,<span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h5 id="对象的内存布局">对象的内存布局</h5>
+<p>对象在堆内存中的存储布局可以分为三个部分：对象头（Header），实例数据（Instance
+Data）和对齐填充（Padding）</p>
+<p>对象头：包含两类信息。1.用于存储对象自身的运行时数据，如哈希码（HashCode），GC分代年龄，锁状态标志，线程持有的锁，偏向线程ID，偏向时间戳等Mark
+Word。32个比特存储空间中：25个bit用于存储对象哈希码，4bit用于存储对象分代年龄，2个bit用于存储锁标志位，1个bit固定位0。2.类型指针，即对象指向它的类型元数据的指针，通过这个指针确定该对象是哪个类的实例。此外，如果对象是一个Java数组，那在header中还必须有一块用于记录数组长度的数据。</p>
+<p>实例数据：程序代码中定义的各种类型的字段内容。</p>
+<p>对齐填充：占位符，任何对象大小都必须是8字节的整数倍。</p>
+<h5 id="对象的访问定位">对象的访问定位</h5>
+<p>通过栈上的 reference 数据来操作堆上的具体对象（栈帧局部变量表）。</p>
+<p>对象访问方式：1.句柄访问，2.直接指针访问。</p>
+<p>句柄访问：Java堆中将会划分出一块内存作为句柄池， reference
+中存储的就是对象的句柄地址，而句柄中包含了对象实例数据（堆）与对象类型数据（方法区）各自的具体地址信息。</p>
+<p>直接指针访问：reference 中存储的直接就是对象的地址。</p>
+<p>使用句柄访问：reference中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，而
+reference 本身不用修改。直接指针速度快，减少了一次指针定位开销。</p>
+<ol type="1">
+<li></li>
+</ol>
+<h4 id="section"></h4>
 
                 
               </div>
@@ -365,32 +419,11 @@ transmitted）</li>
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Algorithm/" class="category-chain-item">Algorithm</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0/" class="print-no-link">#学习</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -402,8 +435,8 @@ transmitted）</li>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>限流算法笔记</div>
-      <div>http://example.com/2023/11/25/限流算法笔记/</div>
+      <div>JVM内存管理</div>
+      <div>http://example.com/2023/12/14/JVM解读/</div>
     </div>
     <div class="license-meta">
       
@@ -415,7 +448,7 @@ transmitted）</li>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月25日</div>
+          <div>2023年12月14日</div>
         </div>
       
       
@@ -447,15 +480,15 @@ transmitted）</li>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/14/JVM%E8%A7%A3%E8%AF%BB/" title="JVM内存管理">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">JVM内存管理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2023/11/25/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" title="限流算法笔记">
+                        <span class="hidden-mobile">限流算法笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
